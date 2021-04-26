@@ -31,7 +31,6 @@ const TopBar = () => {
   const {theme, switchTheme} = useContext(ThemeContext)
   return (
     <Container>
-      <Header>BEER GATHERING</Header>
       <div>
         <Switch checked={theme === 'dark'} onChange={() => switchTheme(theme === 'dark' ? 'light' : 'dark')} />
         <StyledMoon size="32"  />

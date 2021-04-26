@@ -1,19 +1,18 @@
 import React from 'react'
+import { CssBaseline, Paper, Typography } from '@material-ui/core'
+import Header from './Components/Header'
 import { ThemeProvider } from './Contexts/ThemeContext'
-import ContentContainer from './Components/ContentContainer'
-import TopBar from './Components/TopBar'
-import Theme from './Theme'
 
 const App = () => {
+  
   return (
    <>
     <ThemeProvider>
-      <Theme>
-        <TopBar />
-        <ContentContainer>
-          <h1>Developing...</h1>
-        </ContentContainer>
-      </Theme>
+      <Header />
+      <CssBaseline />
+      <Paper>
+        <Typography>Developing...</Typography>
+      </Paper>
     </ThemeProvider>
    </>
   )
