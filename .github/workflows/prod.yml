@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Hello world
+        env:
+          REACT_APP_DOMAIN: ${{ secrets.REACT_APP_AUTH0_DOMAIN }}
       - uses: actions/checkout@v2
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
