@@ -4,9 +4,9 @@ import { Button } from '@material-ui/core'
 
 
 const SignupButton = () => {
-  const {loginWithPopup} = useAuth0()
+  const {loginWithRedirect} = useAuth0()
   return (
-    <Button onClick={() => loginWithPopup({screen_hint: "signup"})}>Signup</Button>
+    <Button onClick={() => loginWithRedirect({screen_hint: "signup"})}>Signup</Button>
   )
 }
 

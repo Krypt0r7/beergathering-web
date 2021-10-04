@@ -1,30 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink} from '@apollo/client'
-import AuthProvider from './auth/AuthProvider'
+import { Auth0Provider } from "@auth0/auth0-react";
 
-const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/graphql'
-})
+const domain = process.env.REACT_APP_AUTH0_DOMAIN
+const clientId = process.env.REACT_APP_AUTH0_CLIENTID
+const audience = process.env.REACT_APP_AUTH0_AUDIENCE
 
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-  fetchOptions: {
-    mode: 'no-cors'
-  }
-})
-
+console.log(domain, audience, clientId);
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
-    </AuthProvider>
+    <Auth0Provider
+          domain={domain}
+          clientId={clientId}
+          redirectUri={window.location.origin}
+          audience={audience}
+          // scope="read:current_user read:app_metadata update:current_user_metadata read:beers"
+        >
+    <App />
+    </Auth0Provider>
   </React.StrictMode>,
   document.querySelector('#root')
 )
-
