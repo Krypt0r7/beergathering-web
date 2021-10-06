@@ -7,7 +7,6 @@ const BEER_QUERY = gql`
     beer {
       beers {
         name
-        breweryName
         type
       }
     }
@@ -16,21 +15,17 @@ const BEER_QUERY = gql`
 
 const CREATE_BEER = gql`
   mutation {
-  beer {
-    createBeer(
-      input: {
-        name: "TestBeer"
-        breweryName: "Hello Brew"
-        type: "IPA"
-        alcohol: 5
-      }
-    ) {
-      success
-      message
+    beer {
+      createBeer(
+        input: {
+          name: "TestBeer"
+          breweryName: "Hello Brewski"
+          type: "IPA"
+          alcohol: 5
+        }
+      )
     }
   }
-}
-
 `
 
 const Start = () => {
@@ -39,8 +34,8 @@ const Start = () => {
 
   return (
     <div>
-      <Button onClick={() => createBeer()} >Create beer</Button>
-      <Button onClick={() => getBeers()} >Get beers</Button>
+      <Button onClick={() => createBeer()}>Create beer</Button>
+      <Button onClick={() => getBeers()}>Get beers</Button>
 
       {data?.beer.beers.map((x, i) => {
         return <div key={i}>{x.name}</div>

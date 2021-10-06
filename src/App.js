@@ -53,7 +53,6 @@ const App = () => {
       const accesstoken = await getAccessTokenSilently({
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       })
-      console.log(accesstoken)
       setToken(accesstoken)
     }
 
