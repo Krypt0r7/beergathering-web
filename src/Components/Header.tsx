@@ -13,33 +13,59 @@ import styled from 'styled-components'
 import useCustomTheme from '../Hooks/useCustomTheme'
 import { useAuth0 } from '@auth0/auth0-react'
 import LoginButton from './Buttons/LoginButton'
-import SignupButton from './Buttons/SignupButton'
+import SignUpButton from './Buttons/SignUpButton'
 import LogoutButton from './Buttons/LogoutButton'
 
-const StyledMenuIcon = styled(MenuIcon)`
+interface StyledMenuIconProps {
+  dark: boolean
+}
+
+interface ToolbarContainerProps {
+  large: boolean
+}
+
+interface HeadingProps {
+  dark: boolean
+}
+
+const StyledMenuIcon = styled(MenuIcon) <StyledMenuIconProps>`
   ${({ dark }) => (dark ? 'color: white;' : 'color: black;')}
 `
-const ToolbarContainer = styled.div`
+const ToolbarContainer = styled.div<ToolbarContainerProps>`
   display: flex;
   width: 100%;
   ${({ large }) => (large ? 'justify-content: space-between;' : 'justify-content: flex-start;')}
   align-items: center;
 `
-const Heading = styled.h1`
+const Heading = styled.h1<HeadingProps>`
   font-size: 1em;
   ${({ dark }) => (dark ? 'color: white;' : 'color: #333;')}
 `
 
-const displayMobile = (isDark, isLarge, isAutenticated) => (
-  <>
-    <IconButton>
-      <StyledMenuIcon dark={isDark} />
-    </IconButton>
-    <Heading dark={isDark}>BEER GATHERING</Heading>
-  </>
-)
+interface DisplayMobileProps {
+  isDark: boolean,
+  isAuthenticated: boolean
+}
 
-const displayDesktop = (isDark, isAuthenticated, switchTheme) => (
+
+const DisplayMobile = ({ isDark }: DisplayMobileProps) => {
+  return (
+    <React.Fragment>
+      <IconButton>
+        <StyledMenuIcon dark={isDark} />
+      </IconButton>
+      <Heading dark={isDark}>BEER GATHERING</Heading>
+    </React.Fragment>
+  )
+}
+
+interface DisplayDesktopProps {
+  isDark: boolean,
+  isAuthenticated: boolean,
+  switchTheme: Function
+}
+
+const DisplayDesktop = ({ isDark, isAuthenticated, switchTheme }: DisplayDesktopProps) => (
   <>
     <Heading dark={isDark}>BEER GATHERING</Heading>
     <Box display='flex'>
@@ -49,7 +75,7 @@ const displayDesktop = (isDark, isAuthenticated, switchTheme) => (
       {!isAuthenticated ? (
         <>
           <LoginButton />
-          <SignupButton />
+          <SignUpButton />
         </>
       ) : (
         <LogoutButton />
@@ -64,8 +90,8 @@ const Header = () => {
   const { isAuthenticated, isLoading } = useAuth0()
 
   const isLarge = useMediaQuery(theme.breakpoints.up('sm'))
-  
-  if(isLoading) return null 
+
+  if (isLoading) return null
   return (
     <>
       <AppBar
@@ -75,8 +101,8 @@ const Header = () => {
         <Toolbar>
           <ToolbarContainer large={isLarge}>
             {isLarge
-              ? displayDesktop(isDark, isAuthenticated, switchTheme)
-              : displayMobile(isDark, isLarge, isAuthenticated)}
+              ? <DisplayDesktop isAuthenticated={isAuthenticated} isDark={isDark} switchTheme={switchTheme} />
+              : <DisplayMobile isDark={isDark} isAuthenticated={isAuthenticated} />}
           </ToolbarContainer>
         </Toolbar>
       </AppBar>
