@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CssBaseline } from '@material-ui/core'
 import Header from './Components/Header'
 import { ThemeProvider } from './Contexts/ThemeContext'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client'
-import {setContext} from '@apollo/client/link/context'
+import { setContext } from '@apollo/client/link/context'
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import Start from './Pages/Start'
 import {
   useAuth0
 } from '@auth0/auth0-react'
-import { useLocalStorage } from './Hooks/useLocalStorage'
 
 // const ProtectedRoute = ({ component, ...args }) => (
 //   <Route component={withAuthenticationRequired(component)} {...args} />
@@ -21,15 +20,15 @@ import { useLocalStorage } from './Hooks/useLocalStorage'
 // }
 
 const App = () => {
-  const [token, setToken] = useLocalStorage("token", null)
+  const [token, setToken] = useState("")
   const {
     getAccessTokenSilently,
     isAuthenticated,
     isLoading,
     loginWithRedirect
   } = useAuth0()
-  
-  const authLink = setContext((_, {headers} ) => {
+
+  const authLink = setContext((_, { headers }) => {
     return {
       headers: {
         ...headers,
@@ -49,7 +48,7 @@ const App = () => {
   })
 
   useEffect(() => {
-    async function getToken () {
+    async function getToken() {
       const accesstoken = await getAccessTokenSilently({
         audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       })
@@ -69,17 +68,17 @@ const App = () => {
   return (
     <>
       <ThemeProvider>
-          <ApolloProvider client={client}>
-            <Router>
-              <Header />
-              <CssBaseline />
-              <Switch>
-                <Route path='/'>
-                  <Start />
-                </Route>
-              </Switch>
-            </Router>
-          </ApolloProvider>
+        <ApolloProvider client={client}>
+          <Router>
+            <Header />
+            <CssBaseline />
+            <Switch>
+              <Route path='/'>
+                <Start />
+              </Route>
+            </Switch>
+          </Router>
+        </ApolloProvider>
       </ThemeProvider>
     </>
   )
