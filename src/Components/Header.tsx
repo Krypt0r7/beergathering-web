@@ -6,8 +6,8 @@ import {
   Toolbar,
   useMediaQuery,
   useTheme
-} from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu'
+} from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 import React from 'react'
 import styled from 'styled-components'
 import useCustomTheme from '../Hooks/useCustomTheme'
@@ -106,7 +106,7 @@ const Header = () => {
           </ToolbarContainer>
         </Toolbar>
       </AppBar>
-      <Toolbar />
+
     </>
   )
 }

@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState, FC } from 'react'
 import {
-  createMuiTheme,
+  createTheme,
   ThemeProvider as MuiThemeProvider
-} from '@material-ui/core'
+} from '@mui/material'
 import { useLocalStorage } from '../Hooks/useLocalStorage'
 
 interface IThemeContext {
@@ -21,9 +21,9 @@ export const ThemeProvider: FC = ({ children }) => {
   const [isDark, setIsDark] = useState(defaultState.isDark)
   const [dark, setDark] = useLocalStorage('darkMode', false)
 
-  const theme = createMuiTheme({
+  const theme = createTheme({
     palette: {
-      type: dark ? 'dark' : 'light',
+      mode: dark ? 'dark' : 'light',
       warning: {
         main: '#f57c00'
       },

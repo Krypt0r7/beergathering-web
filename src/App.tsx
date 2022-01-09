@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CssBaseline } from '@material-ui/core'
+import { CssBaseline } from '@mui/material'
 import Header from './Components/Header'
 import { ThemeProvider } from './Contexts/ThemeContext'
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client'
@@ -9,15 +9,8 @@ import Start from './Pages/Start'
 import {
   useAuth0
 } from '@auth0/auth0-react'
-
-// const ProtectedRoute = ({ component, ...args }) => (
-//   <Route component={withAuthenticationRequired(component)} {...args} />
-// )
-
-// const onRedirectCallback = appState => {
-//   // Use the router's history module to replace the url
-//   // history.replace(appState?.returnTo || window.location.pathname)
-// }
+import PrivateRoute from './Components/PrivateRoute'
+import Search from './Pages/Search'
 
 const App = () => {
   const [token, setToken] = useState("")
@@ -25,7 +18,6 @@ const App = () => {
     getAccessTokenSilently,
     isAuthenticated,
     isLoading,
-    loginWithRedirect
   } = useAuth0()
 
   const authLink = setContext((_, { headers }) => {
@@ -55,12 +47,8 @@ const App = () => {
       setToken(accesstoken)
     }
 
-    if (!isLoading) {
-      if (!isAuthenticated) {
-        loginWithRedirect()
-      } else {
-        getToken()
-      }
+    if (!isLoading && isAuthenticated) {
+      getToken()
     }
     // eslint-disable-next-line
   }, [getAccessTokenSilently, isAuthenticated, isLoading])
@@ -69,13 +57,12 @@ const App = () => {
     <>
       <ThemeProvider>
         <ApolloProvider client={client}>
+          <Header />
+          <CssBaseline />
           <Router>
-            <Header />
-            <CssBaseline />
             <Switch>
-              <Route path='/'>
-                <Start />
-              </Route>
+              <Route exact path='/' component={Start} />
+              <PrivateRoute component={Search} path="/search" />
             </Switch>
           </Router>
         </ApolloProvider>
