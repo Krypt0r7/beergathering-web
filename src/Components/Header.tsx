@@ -87,11 +87,10 @@ const DisplayDesktop = ({ isDark, isAuthenticated, switchTheme }: DisplayDesktop
 const Header = () => {
   const theme = useTheme()
   const { isDark, switchTheme } = useCustomTheme()
-  const { isAuthenticated, isLoading } = useAuth0()
+  const { isAuthenticated } = useAuth0()
 
   const isLarge = useMediaQuery(theme.breakpoints.up('sm'))
 
-  if (isLoading) return null
   return (
     <>
       <AppBar

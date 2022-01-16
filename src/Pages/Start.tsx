@@ -1,15 +1,29 @@
-import { Box, Container } from '@mui/material'
+import { Container } from '@mui/material'
 import React from 'react'
+import Section from '../Components/Section'
+import TopImage from '../Components/TopImage'
+import TopList from '../Components/TopList'
 
 const Start = () => {
 
   return (
-    <Container>
-      <Box>
-        <h1>This is start, welcome to Beer Gathering</h1>
-      </Box>
+    <React.Fragment>
+      <TopImage imageUrl="https://s3.eu-north-1.amazonaws.com/images.beergathering/beer-tap.webp" />
+      <Container disableGutters maxWidth="lg">
 
-    </Container>
+        <Section>
+          <TopList name="Reccently rated" list={[
+            { name: "Test r", alcohol: 6 },
+            { name: "Beer for schizzel", alcohol: 5 }]} />
+          <TopList name="Highest rated" list={[
+            { name: "Test r", alcohol: 6 },
+            { name: "Beer for schizzel", alcohol: 5 }]} />
+          <TopList name="Most liked" list={[
+            { name: "Test r", alcohol: 6 },
+            { name: "Beer for schizzel", alcohol: 5 }]} />
+        </Section>
+      </Container>
+    </React.Fragment>
   )
 }
 

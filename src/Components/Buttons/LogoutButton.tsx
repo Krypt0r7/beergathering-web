@@ -10,7 +10,7 @@ const LogoutButton = () => {
     logout({ returnTo: window.location.origin })
   }
   return (
-    <Button onClick={() => handleLogout()}>Logout</Button>
+    <Button color="primary" onClick={() => handleLogout()}>Logout</Button>
   )
 }
 
