@@ -8,13 +8,14 @@ import {
   useTheme
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import useCustomTheme from '../Hooks/useCustomTheme'
 import { useAuth0 } from '@auth0/auth0-react'
 import LoginButton from './Buttons/LoginButton'
 import SignUpButton from './Buttons/SignUpButton'
 import LogoutButton from './Buttons/LogoutButton'
+import Drawer from './Drawer'
 
 interface StyledMenuIconProps {
   dark: boolean
@@ -39,6 +40,7 @@ const ToolbarContainer = styled.div<ToolbarContainerProps>`
 `
 const Heading = styled.h1<HeadingProps>`
   font-size: 1em;
+  white-space: nowrap;
   ${({ dark }) => (dark ? 'color: white;' : 'color: #333;')}
 `
 
@@ -49,13 +51,16 @@ interface DisplayMobileProps {
 
 
 const DisplayMobile = ({ isDark }: DisplayMobileProps) => {
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
   return (
-    <React.Fragment>
+    <Box display='flex' alignItems="center">
       <IconButton>
-        <StyledMenuIcon dark={isDark} />
+        <StyledMenuIcon dark={isDark} onClick={() => setDrawerOpen(true)} />
       </IconButton>
       <Heading dark={isDark}>BEER GATHERING</Heading>
-    </React.Fragment>
+      <Drawer setDrawerOpen={() => setDrawerOpen(false)} open={drawerOpen} />
+    </Box>
   )
 }
 
