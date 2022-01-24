@@ -21,22 +21,7 @@ export const ThemeProvider: FC = ({ children }) => {
   const [isDark, setIsDark] = useState(defaultState.isDark)
   const [dark, setDark] = useLocalStorage('darkMode', false)
 
-  const theme = createTheme({
-    palette: {
-      mode: dark ? 'dark' : 'light',
-      warning: {
-        main: '#f57c00'
-      },
-      primary: {
-        main: '#417B5A'
-      },
-      success: {
-        main: '#388e3c'
-      },
-      background: {
-        default: dark ? "#222" : "#fff"
-      }
-    },
+  const sharedTheme = {
     typography: {
       h1: { fontSize: '2em' },
       h2: { fontSize: '1.5em' },
@@ -45,6 +30,48 @@ export const ThemeProvider: FC = ({ children }) => {
       h5: { fontSize: '.83em' },
       h6: { fontSize: '.75em' }
     }
+  }
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      warning: {
+        main: '#f57c00'
+      },
+      primary: {
+        main: '#87C09F'
+      },
+      success: {
+        main: '#388e3c'
+      },
+      background: {
+        default: "#222"
+      }
+    },
+    ...sharedTheme
+  })
+
+
+  const theme = createTheme({
+    palette: {
+      mode: 'light',
+      text: {
+        primary: '#333'
+      },
+      warning: {
+        main: '#FF9933'
+      },
+      primary: {
+        main: '#417B5A',
+      },
+      success: {
+        main: '#388e3c'
+      },
+      background: {
+        default: "#fff"
+      }
+    },
+    ...sharedTheme
   })
 
   useEffect(() => {
@@ -56,7 +83,7 @@ export const ThemeProvider: FC = ({ children }) => {
   }
 
   return (
-    <MuiThemeProvider theme={theme}>
+    <MuiThemeProvider theme={dark ? darkTheme : theme}>
       <ThemeContext.Provider value={{ isDark, switchTheme }}>
         {children}
       </ThemeContext.Provider>

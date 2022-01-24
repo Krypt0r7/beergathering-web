@@ -21,8 +21,8 @@ const StyledImage = styled.div<{ imageUrl: string }>`
 const TopImage = ({ imageUrl }: ITopImageProps) => {
   return (
     <StyledImage imageUrl={imageUrl} >
-      <Box height="100%" display="flex" justifyContent="center" alignItems="center" >
-        <Typography textAlign="center" variant='h1'>This is start, welcome to Beer Gathering</Typography>
+      <Box height="100%" display="flex" justifyContent="center" alignItems="center" marginX={1} >
+        <Typography textAlign="center" color="white" variant='h1'>This is start, welcome to Beer Gathering</Typography>
       </Box>
     </StyledImage>
   )

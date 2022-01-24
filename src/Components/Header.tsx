@@ -2,7 +2,6 @@ import {
   AppBar,
   Box,
   IconButton,
-  Switch,
   Toolbar,
   useMediaQuery,
   useTheme
@@ -16,6 +15,7 @@ import LoginButton from './Buttons/LoginButton'
 import SignUpButton from './Buttons/SignUpButton'
 import LogoutButton from './Buttons/LogoutButton'
 import Drawer from './Drawer'
+import DarkSwitch from './DarkSwitch'
 
 interface StyledMenuIconProps {
   dark: boolean
@@ -59,23 +59,22 @@ const DisplayMobile = ({ isDark }: DisplayMobileProps) => {
         <StyledMenuIcon dark={isDark} onClick={() => setDrawerOpen(true)} />
       </IconButton>
       <Heading dark={isDark}>BEER GATHERING</Heading>
-      <Drawer setDrawerOpen={() => setDrawerOpen(false)} open={drawerOpen} />
+      <Drawer setDrawerOpen={setDrawerOpen} open={drawerOpen} />
     </Box>
   )
 }
 
 interface DisplayDesktopProps {
   isDark: boolean,
-  isAuthenticated: boolean,
-  switchTheme: Function
+  isAuthenticated: boolean
 }
 
-const DisplayDesktop = ({ isDark, isAuthenticated, switchTheme }: DisplayDesktopProps) => (
+const DisplayDesktop = ({ isDark, isAuthenticated }: DisplayDesktopProps) => (
   <>
     <Heading dark={isDark}>BEER GATHERING</Heading>
     <Box display='flex'>
-      <Box display='flex' alignItems='center'>
-        <Switch checked={isDark} onChange={() => switchTheme()} />
+      <Box marginRight={2}>
+        <DarkSwitch />
       </Box>
       {!isAuthenticated ? (
         <>
@@ -91,7 +90,7 @@ const DisplayDesktop = ({ isDark, isAuthenticated, switchTheme }: DisplayDesktop
 
 const Header = () => {
   const theme = useTheme()
-  const { isDark, switchTheme } = useCustomTheme()
+  const { isDark } = useCustomTheme()
   const { isAuthenticated } = useAuth0()
 
   const isLarge = useMediaQuery(theme.breakpoints.up('sm'))
@@ -105,8 +104,9 @@ const Header = () => {
         <Toolbar>
           <ToolbarContainer large={isLarge}>
             {isLarge
-              ? <DisplayDesktop isAuthenticated={isAuthenticated} isDark={isDark} switchTheme={switchTheme} />
-              : <DisplayMobile isDark={isDark} isAuthenticated={isAuthenticated} />}
+              ? <DisplayDesktop isAuthenticated={isAuthenticated} isDark={isDark} />
+              : <DisplayMobile isDark={isDark} isAuthenticated={isAuthenticated} />
+            }
           </ToolbarContainer>
         </Toolbar>
       </AppBar>
