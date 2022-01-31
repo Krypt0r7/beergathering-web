@@ -9,6 +9,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import useCustomTheme from '../Hooks/useCustomTheme'
 import { useAuth0 } from '@auth0/auth0-react'
 import LoginButton from './Buttons/LoginButton'
@@ -18,7 +19,7 @@ import Drawer from './Drawer'
 import DarkSwitch from './DarkSwitch'
 
 interface StyledMenuIconProps {
-  dark: boolean
+  colour: string
 }
 
 interface ToolbarContainerProps {
@@ -30,7 +31,7 @@ interface HeadingProps {
 }
 
 const StyledMenuIcon = styled(MenuIcon) <StyledMenuIconProps>`
-  ${({ dark }) => (dark ? 'color: white;' : 'color: black;')}
+  ${({ colour }) => (`color: ${colour};`)}
 `
 const ToolbarContainer = styled.div<ToolbarContainerProps>`
   display: flex;
@@ -44,34 +45,21 @@ const Heading = styled.h1<HeadingProps>`
   ${({ dark }) => (dark ? 'color: white;' : 'color: #333;')}
 `
 
-interface DisplayMobileProps {
-  isDark: boolean,
-  isAuthenticated: boolean
-}
+const displayMobile = (isDark: boolean, drawerOpen: boolean, setDrawerOpen: Function, history: any) => (
+  <Box display='flex' alignItems="center">
+    <IconButton onClick={() => setDrawerOpen(true)} >
+      <StyledMenuIcon colour={isDark ? 'white' : 'black'} />
+    </IconButton>
+    <Heading onClick={() => history.push('/')} dark={isDark}>BEER GATHERING</Heading>
+    <Drawer setDrawerOpen={setDrawerOpen} open={drawerOpen} />
+  </Box>
+)
 
 
-const DisplayMobile = ({ isDark }: DisplayMobileProps) => {
-  const [drawerOpen, setDrawerOpen] = useState(false)
 
-  return (
-    <Box display='flex' alignItems="center">
-      <IconButton>
-        <StyledMenuIcon dark={isDark} onClick={() => setDrawerOpen(true)} />
-      </IconButton>
-      <Heading dark={isDark}>BEER GATHERING</Heading>
-      <Drawer setDrawerOpen={setDrawerOpen} open={drawerOpen} />
-    </Box>
-  )
-}
-
-interface DisplayDesktopProps {
-  isDark: boolean,
-  isAuthenticated: boolean
-}
-
-const DisplayDesktop = ({ isDark, isAuthenticated }: DisplayDesktopProps) => (
+const displayDesktop = (isDark: boolean, isAuthenticated: boolean, history: any) => (
   <>
-    <Heading dark={isDark}>BEER GATHERING</Heading>
+    <Heading onClick={() => history.push('/')} dark={isDark}>BEER GATHERING</Heading>
     <Box display='flex'>
       <Box marginRight={2}>
         <DarkSwitch />
@@ -90,8 +78,10 @@ const DisplayDesktop = ({ isDark, isAuthenticated }: DisplayDesktopProps) => (
 
 const Header = () => {
   const theme = useTheme()
+  const history = useHistory()
   const { isDark } = useCustomTheme()
   const { isAuthenticated } = useAuth0()
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   const isLarge = useMediaQuery(theme.breakpoints.up('sm'))
 
@@ -99,13 +89,13 @@ const Header = () => {
     <>
       <AppBar
         position='static'
-        style={{ backgroundColor: 'transparent', boxShadow: 'none' }}
+        sx={{ backgroundColor: 'transparent', boxShadow: 'none' }}
       >
         <Toolbar>
           <ToolbarContainer large={isLarge}>
             {isLarge
-              ? <DisplayDesktop isAuthenticated={isAuthenticated} isDark={isDark} />
-              : <DisplayMobile isDark={isDark} isAuthenticated={isAuthenticated} />
+              ? displayDesktop(isDark, isAuthenticated, history)
+              : displayMobile(isDark, drawerOpen, setDrawerOpen, history)
             }
           </ToolbarContainer>
         </Toolbar>

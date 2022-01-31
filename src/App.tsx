@@ -57,9 +57,9 @@ const App = () => {
     <>
       <ThemeProvider>
         <ApolloProvider client={client}>
-          <Header />
-          <CssBaseline />
           <Router>
+            <Header />
+            <CssBaseline />
             <Switch>
               <Route exact path='/' component={Start} />
               <PrivateRoute component={Search} path="/search" />

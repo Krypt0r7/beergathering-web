@@ -12,7 +12,7 @@ interface IThemeContext {
 
 const defaultState = {
   isDark: false,
-  switchTheme: () => { }
+  switchTheme: Function
 }
 
 export const ThemeContext = createContext<IThemeContext>(defaultState)

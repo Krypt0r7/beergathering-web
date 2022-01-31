@@ -1,13 +1,13 @@
 import React from 'react'
-import { Divider, Drawer as MuiDrawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Divider, Drawer as MuiDrawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import styled from 'styled-components';
 import CancelIcon from '@mui/icons-material/Cancel';
-import LoginIcon from '@mui/icons-material/Login';
 import { useAuth0 } from '@auth0/auth0-react';
-import LogoutIcon from '@mui/icons-material/Logout';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
+import HomeIcon from '@mui/icons-material/Home'
+import SearchIcon from '@mui/icons-material/Search'
 import { Box } from '@mui/system';
 import DarkSwitch from './DarkSwitch';
+import { useHistory } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -21,10 +21,22 @@ const DrawerHeader = styled('div')(() => ({
   alignItems: 'center',
   padding: "0 1em",
   justifyContent: 'flex-end',
+  width: '100%'
 }));
 
+const StyledListItemText = styled(ListItemText)`
+  text-align: center;
+`
+
 const Drawer = ({ open, setDrawerOpen }: IDrawerProps) => {
+  const history = useHistory()
   const { loginWithRedirect, isAuthenticated, logout } = useAuth0()
+
+  const changePage = (path: string) => {
+
+    history.push(path)
+    setDrawerOpen(false)
+  }
 
   return (
     <MuiDrawer
@@ -41,7 +53,7 @@ const Drawer = ({ open, setDrawerOpen }: IDrawerProps) => {
       open={open}
       onClose={() => setDrawerOpen(false)}
     >
-      <DrawerHeader style={{ width: '100%' }}>
+      <DrawerHeader>
         <Box display="flex" justifyContent="space-between" width='100%' marginTop={1}>
 
           <DarkSwitch />
@@ -50,43 +62,40 @@ const Drawer = ({ open, setDrawerOpen }: IDrawerProps) => {
           </IconButton>
         </Box>
       </DrawerHeader>
-      {/* <Divider /> */}
-      <List>
-        <ListItem>
-          <ListItemText primary="Home" />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        {!isAuthenticated ?
-          <>
-            <Typography style={{ marginBlock: '.5em' }} textAlign="center">Account</Typography>
-            <ListItem button onClick={() => loginWithRedirect()}>
-              <ListItemText primary="Login" />
-              <ListItemIcon>
-                <LoginIcon />
-              </ListItemIcon>
-            </ListItem>
-            <ListItem button onClick={() => loginWithRedirect({ screen_hint: "Sign Up" })}>
-              <ListItemText primary="Register" />
-              <HowToRegIcon>
-                <LoginIcon />
-              </HowToRegIcon>
-            </ListItem>
-          </>
-          :
-          <ListItem button onClick={() => logout()}>
-            <ListItemText primary="Logout" />
+      <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+        <List>
+          <ListItem onClick={() => changePage('/')}>
+            <ListItemText primary="Home" />
             <ListItemIcon>
-              <LogoutIcon />
+              <HomeIcon />
             </ListItemIcon>
           </ListItem>
+          <ListItem onClick={() => changePage('/search')}>
+            <ListItemText primary="Search" />
+            <ListItemIcon>
+              <SearchIcon />
+            </ListItemIcon>
+          </ListItem>
+        </List>
 
-        }
-      </List>
+        <List>
+          {!isAuthenticated ?
+            <>
+              <ListItem button onClick={() => loginWithRedirect()}>
+                <StyledListItemText primary="Login" />
+              </ListItem>
+            </>
+            :
+            <ListItem button onClick={() => logout()}>
+              <StyledListItemText primary="Logout" />
+            </ListItem>
+
+          }
+        </List>
+      </Box>
       <Divider />
 
-    </MuiDrawer>
+    </MuiDrawer >
   )
 }
 

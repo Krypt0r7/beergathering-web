@@ -10,7 +10,7 @@ const LogoutButton = () => {
     logout({ returnTo: window.location.origin })
   }
   return (
-    <Button style={{ fontWeight: 'bold' }} color="primary" onClick={() => handleLogout()}>Logout</Button>
+    <Button sx={{ fontWeight: 'bold' }} color="primary" onClick={() => handleLogout()}>Logout</Button>
   )
 }
 

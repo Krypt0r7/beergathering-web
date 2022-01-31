@@ -1,4 +1,4 @@
-import { Typography, Box } from '@mui/material'
+import { Box } from '@mui/material'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -18,15 +18,20 @@ const StyledImage = styled.div<{ imageUrl: string }>`
   margin-right: auto;
 `
 
-const TopImage = ({ imageUrl }: ITopImageProps) => {
-  return (
-    <StyledImage imageUrl={imageUrl} >
-      <Box height="100%" display="flex" justifyContent="center" alignItems="center" marginX={1} >
-        <Typography textAlign="center" color="white" variant='h1'>This is start, welcome to Beer Gathering</Typography>
-      </Box>
-    </StyledImage>
-  )
-}
+const StyledH1 = styled.h1`
+  text-align: center;
+  color: #fff;
+  text-shadow: .5px .5px #333;
+`
+
+const TopImage = ({ imageUrl }: ITopImageProps) => (
+  <StyledImage imageUrl={imageUrl} >
+    <Box height="100%" display="flex" justifyContent="center" alignItems="center" marginX={1} >
+      <StyledH1>This is start, welcome to Beer Gathering</StyledH1>
+    </Box>
+  </StyledImage>
+)
+
 
 export default TopImage
 
