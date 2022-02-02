@@ -1,10 +1,8 @@
 import React from 'react'
-import { Divider, Drawer as MuiDrawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { Divider, Drawer as MuiDrawer, IconButton, List, ListItem, ListItemText } from '@mui/material'
 import styled from 'styled-components';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useAuth0 } from '@auth0/auth0-react';
-import HomeIcon from '@mui/icons-material/Home'
-import SearchIcon from '@mui/icons-material/Search'
 import { Box } from '@mui/system';
 import DarkSwitch from './DarkSwitch';
 import { useHistory } from 'react-router-dom';
@@ -62,19 +60,17 @@ const Drawer = ({ open, setDrawerOpen }: IDrawerProps) => {
           </IconButton>
         </Box>
       </DrawerHeader>
-      <Box display="flex" flexDirection="column" justifyContent="space-between" height="100%">
+      <Box display="flex" marginTop={3} marginBottom={2} marginX={3} flexDirection="column" justifyContent="space-between" height="100%">
         <List>
           <ListItem onClick={() => changePage('/')}>
-            <ListItemText primary="Home" />
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
+            <ListItemText primaryTypographyProps={{
+              fontWeight: 'bold'
+            }} primary="Home" />
           </ListItem>
           <ListItem onClick={() => changePage('/search')}>
-            <ListItemText primary="Search" />
-            <ListItemIcon>
-              <SearchIcon />
-            </ListItemIcon>
+            <ListItemText primaryTypographyProps={{
+              fontWeight: 'bold'
+            }} primary="Search" />
           </ListItem>
         </List>
 
@@ -82,12 +78,16 @@ const Drawer = ({ open, setDrawerOpen }: IDrawerProps) => {
           {!isAuthenticated ?
             <>
               <ListItem button onClick={() => loginWithRedirect()}>
-                <StyledListItemText primary="Login" />
+                <StyledListItemText primaryTypographyProps={{
+                  variant: 'body2'
+                }} primary="Login" />
               </ListItem>
             </>
             :
             <ListItem button onClick={() => logout()}>
-              <StyledListItemText primary="Logout" />
+              <StyledListItemText primaryTypographyProps={{
+                variant: 'body2'
+              }} primary="Logout" />
             </ListItem>
 
           }

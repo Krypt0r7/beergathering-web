@@ -9,9 +9,9 @@ const DarkSwitch = () => {
 
   return (
     <Box display="flex" alignItems="center">
-      <BrightnessHighIcon color='action' />
+      <BrightnessHighIcon fontSize='small' color='action' />
       <Switch checked={isDark} onChange={() => switchTheme()} />
-      <NightlightRoundIcon color='action' />
+      <NightlightRoundIcon fontSize='small' color='action' />
     </Box>
   )
 }
