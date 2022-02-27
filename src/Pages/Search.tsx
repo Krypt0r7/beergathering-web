@@ -39,7 +39,7 @@ const Search = () => {
 
 
   return (
-    <Container >
+    <Container maxWidth="md" >
       <Box marginY={2}>
         <TextField
           value={searchParam}
