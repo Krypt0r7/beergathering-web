@@ -1,12 +1,9 @@
 import React, { createContext, useEffect, useState, FC } from 'react'
-import {
-  createTheme,
-  ThemeProvider as MuiThemeProvider
-} from '@mui/material'
+import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material'
 import { useLocalStorage } from '../Hooks/useLocalStorage'
 
 interface IThemeContext {
-  isDark: boolean,
+  isDark: boolean
   switchTheme: () => void
 }
 
@@ -45,12 +42,11 @@ export const ThemeProvider: FC = ({ children }) => {
         main: '#388e3c'
       },
       background: {
-        default: "#222"
+        default: '#222'
       }
     },
     ...sharedTheme
   })
-
 
   const theme = createTheme({
     palette: {
@@ -62,13 +58,13 @@ export const ThemeProvider: FC = ({ children }) => {
         main: '#FF9933'
       },
       primary: {
-        main: '#417B5A',
+        main: '#417B5A'
       },
       success: {
         main: '#388e3c'
       },
       background: {
-        default: "#fff"
+        default: '#fff'
       }
     },
     ...sharedTheme
@@ -90,4 +86,3 @@ export const ThemeProvider: FC = ({ children }) => {
     </MuiThemeProvider>
   )
 }
-

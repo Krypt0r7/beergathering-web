@@ -1,11 +1,7 @@
+import { Container } from '@mui/material'
 import styled from 'styled-components'
 
-const ContentContainer = styled.div`
-  display: flex;
-  width: 100vw;
-  height: calc(100vh - 60px);
-  justify-content: center;
-  align-items: center;
-  background-color: white;
+const ContentContainer = styled(Container)`
+  margin-top: 2em;
 `
-export default  ContentContainer
+export default ContentContainer
