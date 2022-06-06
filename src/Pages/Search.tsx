@@ -1,20 +1,42 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Container, List, ListItem, ListItemIcon, ListItemText, TextField } from '@mui/material'
+import {
+  Box,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  TextField,
+  Typography
+} from '@mui/material'
 import { ArrowRight, SearchSharp } from '@mui/icons-material'
-import { gql, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client'
 import { useDebounce } from '../Hooks/useDebounce'
-import { IBeerQuery } from '../Interfaces/ISearchBeer';
+import { IBeerQuery } from '../Interfaces/ISearchBeer'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
+import ContentContainer from '../Components/ContentContainer'
 
 const SEARCH_QUERY = gql`
-query SearchQuery ($input: BeerSearchInput){
-  beer {
-    searchBeerQuery(input: $input) {
-      id
-      name
-      alcohol
+  query SearchQuery($input: BeerSearchInput) {
+    beer {
+      searchBeerQuery(input: $input) {
+        id
+        name
+        alcohol
+        breweryName
+      }
     }
   }
-}
+`
+
+const StyledListItem = styled(ListItemButton)`
+  margin-bottom: 1em;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `
 
 const Search = () => {
@@ -23,9 +45,8 @@ const Search = () => {
 
   const [execSearch, { data }] = useLazyQuery<IBeerQuery>(SEARCH_QUERY)
 
-
   useEffect(() => {
-    if (debouncedSearch) {
+    if (debouncedSearch && debouncedSearch.length > 2) {
       execSearch({
         variables: {
           input: {
@@ -34,12 +55,10 @@ const Search = () => {
         }
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch]);
-
+  }, [debouncedSearch, execSearch])
 
   return (
-    <Container maxWidth="md" >
+    <ContentContainer maxWidth='md'>
       <Box marginY={2}>
         <TextField
           value={searchParam}
@@ -47,29 +66,37 @@ const Search = () => {
           variant='standard'
           fullWidth
           InputProps={{
-            endAdornment:
-              <SearchSharp />
+            endAdornment: <SearchSharp />
           }}
         />
       </Box>
       <Box>
-        {data &&
-          <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        {data && (
+          <List sx={{ width: '100%' }}>
             {data?.beer.searchBeerQuery.map(beer => (
-
-              <ListItem>
-                <ListItemText primary={beer.name} secondary={beer.alcohol} />
-                <ListItemIcon>
-                  <ArrowRight />
-                </ListItemIcon>
-              </ListItem>
-
-            ))
-            }
+              <Paper key={beer.id} style={{ width: '100%' }}>
+                <StyledLink to={`/beers/${beer.id}`}>
+                  <StyledListItem>
+                    <ListItemText
+                      primary={
+                        <Box>
+                          <Typography>{beer.name}</Typography>
+                          <Typography>{beer.breweryName}</Typography>
+                        </Box>
+                      }
+                      secondary={`${beer.alcohol} %`}
+                    />
+                    <ListItemIcon>
+                      <ArrowRight />
+                    </ListItemIcon>
+                  </StyledListItem>
+                </StyledLink>
+              </Paper>
+            ))}
           </List>
-        }
+        )}
       </Box>
-    </Container >
+    </ContentContainer>
   )
 }
 

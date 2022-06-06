@@ -1,13 +1,14 @@
 export interface IBeerQuery {
-  beer: IBeer;
+  beer: IBeer
 }
 
 interface IBeer {
-  searchBeerQuery: IItems[];
+  searchBeerQuery: IItems[]
 }
 
 interface IItems {
-  id: string;
-  name: string;
-  alcohol: number;
+  id: string
+  name: string
+  alcohol: number
+  breweryName: string
 }

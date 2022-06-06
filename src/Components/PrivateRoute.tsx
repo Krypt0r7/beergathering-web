@@ -1,18 +1,11 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react'
-import React, { FC } from 'react'
-import { Route } from 'react-router-dom'
+import React, { ComponentType } from 'react'
 
-interface IPrivateRouteParams {
-  component: FC,
-  path: string
+interface PrivateRouteParams {
+  component: ComponentType
 }
 
-const PrivateRoute = ({ component, path, ...args }: IPrivateRouteParams) => (
-  <Route
-    component={withAuthenticationRequired(component)}
-    path={path}
-    {...args}
-  />
-)
-
-export default PrivateRoute
+export const PrivateRoute: React.FC<PrivateRouteParams> = ({ component }) => {
+  const Component = withAuthenticationRequired(component)
+  return <Component />
+}
