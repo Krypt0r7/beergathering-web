@@ -3,7 +3,7 @@ export interface IBeerQuery {
 }
 
 interface IBeer {
-  searchBeerQuery: IItems[]
+  searchBeersQuery: IItems[]
 }
 
 interface IItems {

@@ -23,35 +23,40 @@ const StyledImage = styled('img')`
 `
 
 const TOGGLE_LIKE = gql`
-  mutation Mutation($input: CreateLikeInput) {
+  mutation ToggleLikeMutation($input: Like_ToggleLikeInput) {
     like {
-      toggleDrunk(input: $input)
+      toggleLikeMutation(input: $input)
     }
   }
 `
 const TOGGLE_DRUNK = gql`
-  mutation Drunk($input: CreateDrunkInput) {
+  mutation ToggleDrunkMutation($input: Drunk_ToggleDrunkInput) {
     drunk {
-      toggleDrunk(input: $input)
+      toggleDrunkMutation(input: $input)
     }
   }
 `
 
 const BEER_QUERY = gql`
-  query($query: BeerQueryModelInput) {
+  query BeerQuery($model: Beer_BeerModel) {
     beer {
-      beerQuery(model: $query) {
+      beerQuery(model: $model) {
         id
         name
         type
         alcohol
-        breweryName
-        imageUrl
+        likes
         containers {
           type
-          price
           volume
+          price
+          systemetNumber
         }
+        breweryName
+        city
+        country
+        state
+        imageUrl
       }
     }
   }
@@ -63,7 +68,7 @@ const Beer = () => {
 
   const { data } = useQuery<IBeerQueryModel>(BEER_QUERY, {
     variables: {
-      query: {
+      model: {
         id: beerId
       }
     }

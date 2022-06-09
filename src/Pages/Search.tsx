@@ -18,9 +18,9 @@ import { Link } from 'react-router-dom'
 import ContentContainer from '../Components/ContentContainer'
 
 const SEARCH_QUERY = gql`
-  query SearchQuery($input: BeerSearchInput) {
+  query SearchBeersQuery($model: Beer_SearchBeersModel) {
     beer {
-      searchBeerQuery(input: $input) {
+      searchBeersQuery(model: $model) {
         id
         name
         alcohol
@@ -49,7 +49,7 @@ const Search = () => {
     if (debouncedSearch && debouncedSearch.length > 2) {
       execSearch({
         variables: {
-          input: {
+          model: {
             searchParam: debouncedSearch
           }
         }
@@ -73,7 +73,7 @@ const Search = () => {
       <Box>
         {data && (
           <List sx={{ width: '100%' }}>
-            {data?.beer.searchBeerQuery.map(beer => (
+            {data?.beer.searchBeersQuery.map(beer => (
               <Paper key={beer.id} style={{ width: '100%' }}>
                 <StyledLink to={`/beers/${beer.id}`}>
                   <StyledListItem>
