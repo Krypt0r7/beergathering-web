@@ -22,6 +22,7 @@ interface IBeerContainer {
 }
 
 interface IBeer {
+  liked: boolean
   id: string
   name: string
   type: string
@@ -32,4 +33,5 @@ interface IBeer {
   containers: IBeerContainer[]
   breweryId: string
   imageUrl: string
+  hasDrunk: boolean
 }

@@ -57,6 +57,8 @@ const BEER_QUERY = gql`
         country
         state
         imageUrl
+        hasDrunk
+        liked
       }
     }
   }
@@ -66,7 +68,7 @@ const Beer = () => {
   const { beerId } = useParams()
   const { isLarge } = useCustomTheme()
 
-  const { data } = useQuery<IBeerQueryModel>(BEER_QUERY, {
+  const { data, refetch } = useQuery<IBeerQueryModel>(BEER_QUERY, {
     variables: {
       model: {
         id: beerId
@@ -79,7 +81,8 @@ const Beer = () => {
       input: {
         beerId
       }
-    }
+    },
+    onCompleted: () => refetch()
   })
 
   const [toggleDrunk] = useMutation(TOGGLE_DRUNK, {
@@ -87,7 +90,8 @@ const Beer = () => {
       input: {
         beerId
       }
-    }
+    },
+    onCompleted: () => refetch()
   })
 
   const beer = data?.beer.beerQuery
@@ -124,10 +128,20 @@ const Beer = () => {
             </Stack>
             <Stack direction='row'>
               <IconButton onClick={() => toggleLike()}>
-                <Favorite sx={{ fontSize: '1.5em' }} />
+                <Favorite
+                  sx={{
+                    fontSize: '1.5em',
+                    color: beer.liked ? 'red' : 'inherit'
+                  }}
+                />
               </IconButton>
               <IconButton onClick={() => toggleDrunk()}>
-                <CheckRounded sx={{ fontSize: '1.5em' }} />
+                <CheckRounded
+                  sx={{
+                    fontSize: '1.5em',
+                    color: beer.hasDrunk ? 'green' : 'inherit'
+                  }}
+                />
               </IconButton>
             </Stack>
           </Box>
