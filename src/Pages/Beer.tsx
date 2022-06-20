@@ -1,22 +1,29 @@
 import { gql, useMutation, useQuery } from '@apollo/client'
 import {
   Avatar,
-  Paper,
   Stack,
   Typography,
   Box,
+  Button,
+  Card,
+  CardHeader,
   IconButton
 } from '@mui/material'
-import { Favorite, CheckRounded } from '@mui/icons-material'
-import React from 'react'
+import {
+  Favorite,
+  CheckRounded,
+  ListAltRounded,
+  MoreVert
+} from '@mui/icons-material'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import ContentContainer from '../Components/ContentContainer'
 import useCustomTheme from '../Hooks/useCustomTheme'
-import { IBeerQueryModel } from '../Interfaces/IBeerQuery'
+import { IQuery } from '../Interfaces/IQuery'
+import ListDrawer from '../Components/ListDrawer'
 
 const StyledImage = styled('img')`
-  border: 1px solid black;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -25,14 +32,14 @@ const StyledImage = styled('img')`
 const TOGGLE_LIKE = gql`
   mutation ToggleLikeMutation($input: Like_ToggleLikeInput) {
     like {
-      toggleLikeMutation(input: $input)
+      toggleLike(input: $input)
     }
   }
 `
 const TOGGLE_DRUNK = gql`
   mutation ToggleDrunkMutation($input: Drunk_ToggleDrunkInput) {
     drunk {
-      toggleDrunkMutation(input: $input)
+      toggleDrunk(input: $input)
     }
   }
 `
@@ -40,7 +47,7 @@ const TOGGLE_DRUNK = gql`
 const BEER_QUERY = gql`
   query BeerQuery($model: Beer_BeerModel) {
     beer {
-      beerQuery(model: $model) {
+      beer(model: $model) {
         id
         name
         type
@@ -57,18 +64,27 @@ const BEER_QUERY = gql`
         country
         state
         imageUrl
-        hasDrunk
+        hasBeenDrunk
         liked
+      }
+    }
+    list {
+      usersLists {
+        id
+        name
+        description
+        beerIds
       }
     }
   }
 `
 
 const Beer = () => {
+  const [showList, setShowList] = useState(false)
   const { beerId } = useParams()
   const { isLarge } = useCustomTheme()
 
-  const { data, refetch } = useQuery<IBeerQueryModel>(BEER_QUERY, {
+  const { data, refetch } = useQuery<IQuery>(BEER_QUERY, {
     variables: {
       model: {
         id: beerId
@@ -94,92 +110,120 @@ const Beer = () => {
     onCompleted: () => refetch()
   })
 
-  const beer = data?.beer.beerQuery
-
-  if (!beer) return null
+  const beer = data?.beer.beer
 
   return (
-    <ContentContainer>
-      <Stack direction={isLarge ? 'row' : 'column'}>
-        <Box
-          sx={{
-            width: isLarge ? '40%' : '100%',
-            marginBottom: isLarge ? 0 : 2
-          }}
-          height='55vh'
-        >
-          <StyledImage
-            alt='Beer image'
-            src={beer?.imageUrl || '/images/beer-image.webp'}
-          />
-        </Box>
-        <Box
-          sx={{
-            width: '100%',
-            maxWidth: isLarge ? '50%' : undefined,
-            marginLeft: isLarge ? 4 : 0
-          }}
-        >
-          <Box display='flex' alignItems='start'>
-            <Stack sx={{ marginRight: 2 }}>
-              <Typography variant='h2'>{beer?.name}</Typography>
-              <Typography variant='overline'>{beer?.type}</Typography>
-              <Typography variant='h4'>{beer?.alcohol} %</Typography>
-            </Stack>
-            <Stack direction='row'>
-              <IconButton onClick={() => toggleLike()}>
-                <Favorite
-                  sx={{
-                    fontSize: '1.5em',
-                    color: beer.liked ? 'red' : 'inherit'
-                  }}
-                />
-              </IconButton>
-              <IconButton onClick={() => toggleDrunk()}>
-                <CheckRounded
-                  sx={{
-                    fontSize: '1.5em',
-                    color: beer.hasDrunk ? 'green' : 'inherit'
-                  }}
-                />
-              </IconButton>
-            </Stack>
+    <>
+      <ContentContainer maxWidth='lg'>
+        <Stack direction={isLarge ? 'row' : 'column'}>
+          <Box
+            sx={{
+              width: isLarge ? '40%' : '100%',
+              marginBottom: isLarge ? 0 : 2
+            }}
+            height='55vh'
+          >
+            <StyledImage
+              alt='Beer image'
+              src={beer?.imageUrl || '/images/beer-image.webp'}
+            />
           </Box>
-          <Stack direction={isLarge ? 'row' : 'column'} spacing={2} marginY={2}>
-            {beer.containers?.map(x => (
-              <Paper
-                sx={{
-                  padding: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  maxWidth: isLarge ? '250px' : undefined,
-                  width: isLarge ? undefined : '100%'
-                }}
-              >
-                <Avatar sx={{ marginRight: 2 }} />
-                <Box
+          <Stack
+            spacing={2}
+            sx={{
+              width: '100%',
+              maxWidth: isLarge ? '50%' : undefined,
+              marginLeft: isLarge ? 4 : 0
+            }}
+          >
+            <Stack spacing={2}>
+              <Stack spacing={1}>
+                <Typography variant='h2'>{beer?.name}</Typography>
+                <Typography variant='subtitle1'>{beer?.type}</Typography>
+                <Typography variant='h4'>{beer?.alcohol} %</Typography>
+              </Stack>
+              <Stack direction={isLarge ? 'row' : 'column'} spacing={2}>
+                <Button
+                  onClick={() => toggleLike()}
                   sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                    minWidth: '150px'
+                    whiteSpace: 'nowrap',
+                    backgroundColor: beer?.liked ? 'darkred' : 'inherit',
+                    color: beer?.liked ? 'white' : 'inherit'
                   }}
+                  startIcon={<Favorite />}
+                  variant={beer?.liked ? 'contained' : 'outlined'}
                 >
-                  <Stack>
-                    <Typography variant='h4'>{x.type}</Typography>
-                    <Typography variant='body2'>{x.volume} ml</Typography>
-                  </Stack>
-                  <Typography variant='h3' fontWeight='bold'>
-                    {x.price.toFixed(2)} kr
-                  </Typography>
-                </Box>
-              </Paper>
-            ))}
+                  I like this beer
+                </Button>
+                <Button
+                  onClick={() => toggleDrunk()}
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    backgroundColor: beer?.hasBeenDrunk
+                      ? 'darkGreen'
+                      : 'inherit',
+                    color: beer?.hasBeenDrunk ? 'white' : 'inherit'
+                  }}
+                  startIcon={<CheckRounded />}
+                  variant={beer?.hasBeenDrunk ? 'contained' : 'outlined'}
+                >
+                  I've tasted this beer
+                </Button>
+              </Stack>
+              <Button
+                onClick={() => setShowList(true)}
+                color='secondary'
+                fullWidth
+                sx={{
+                  maxWidth: isLarge ? 250 : undefined,
+                  whiteSpace: 'nowrap'
+                }}
+                startIcon={<ListAltRounded />}
+                variant='outlined'
+              >
+                Add to list
+              </Button>
+            </Stack>
+            <Stack>
+              <Typography variant='overline'>Containers</Typography>
+              <Stack direction={isLarge ? 'row' : 'column'} spacing={2}>
+                {beer?.containers?.map((x, i) => (
+                  <Card key={i}>
+                    <CardHeader
+                      avatar={<Avatar />}
+                      title={
+                        <Stack direction='row' spacing={4}>
+                          <Typography>{x.type}</Typography>
+                          <Typography>{`${x.volume} ml`}</Typography>
+                        </Stack>
+                      }
+                      subheader={`${x.price.toFixed(2)} kr`}
+                      action={
+                        <IconButton sx={{ marginLeft: 2 }}>
+                          <MoreVert />
+                        </IconButton>
+                      }
+                    />
+                  </Card>
+                ))}
+              </Stack>
+            </Stack>
           </Stack>
-        </Box>
-      </Stack>
-    </ContentContainer>
+        </Stack>
+      </ContentContainer>
+      <ListDrawer
+        open={showList}
+        onClose={() => setShowList(false)}
+        lists={
+          data?.list.usersLists.map(x => ({
+            ...x,
+            isInList: x.beerIds.includes(beerId || '')
+          })) || []
+        }
+        refetch={refetch}
+        beerId={beerId}
+      />
+    </>
   )
 }
 

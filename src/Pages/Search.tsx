@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
   Box,
+  Fab,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Paper,
+  Stack,
   TextField,
   Typography
 } from '@mui/material'
-import { ArrowRight, SearchSharp } from '@mui/icons-material'
+import { Add, ArrowRight, SearchSharp } from '@mui/icons-material'
 import { gql, useLazyQuery } from '@apollo/client'
 import { useDebounce } from '../Hooks/useDebounce'
-import { IBeerQuery } from '../Interfaces/ISearchBeer'
+import { IQuery } from '../Interfaces/IQuery'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import ContentContainer from '../Components/ContentContainer'
+import { useLocalStorage } from '../Hooks/useLocalStorage'
 
 const SEARCH_QUERY = gql`
-  query SearchBeersQuery($model: Beer_SearchBeersModel) {
+  query SearchBeers($model: Beer_SearchBeersModel) {
     beer {
-      searchBeersQuery(model: $model) {
+      searchBeers(model: $model) {
         id
         name
         alcohol
@@ -40,10 +43,10 @@ const StyledLink = styled(Link)`
 `
 
 const Search = () => {
-  const [searchParam, setSearchParam] = useState('')
+  const [searchParam, setSearchParam] = useLocalStorage('searchParam', '')
   const debouncedSearch = useDebounce(searchParam, 500)
 
-  const [execSearch, { data }] = useLazyQuery<IBeerQuery>(SEARCH_QUERY)
+  const [execSearch, { data }] = useLazyQuery<IQuery>(SEARCH_QUERY)
 
   useEffect(() => {
     if (debouncedSearch && debouncedSearch.length > 2) {
@@ -56,6 +59,8 @@ const Search = () => {
       })
     }
   }, [debouncedSearch, execSearch])
+
+  const searchData = searchParam.length > 2 ? data?.beer.searchBeers : []
 
   return (
     <ContentContainer maxWidth='md'>
@@ -70,10 +75,10 @@ const Search = () => {
           }}
         />
       </Box>
-      <Box>
+      <Stack marginBottom={2}>
         {data && (
           <List sx={{ width: '100%' }}>
-            {data?.beer.searchBeersQuery.map(beer => (
+            {searchData?.map(beer => (
               <Paper key={beer.id} style={{ width: '100%' }}>
                 <StyledLink to={`/beers/${beer.id}`}>
                   <StyledListItem>
@@ -95,7 +100,18 @@ const Search = () => {
             ))}
           </List>
         )}
-      </Box>
+        {searchData?.length === 0 && (
+          <Fab
+            href='/beers/new'
+            variant='extended'
+            size='small'
+            sx={{ alignSelf: 'center' }}
+          >
+            Can't find anything? Create new
+            <Add sx={{ ml: 1 }} />
+          </Fab>
+        )}
+      </Stack>
     </ContentContainer>
   )
 }

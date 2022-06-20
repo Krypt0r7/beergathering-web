@@ -17,6 +17,7 @@ import Search from './Pages/Search'
 import Lists from './Pages/Lists'
 import Beer from './Pages/Beer'
 import Beers from './Pages/Beers'
+import NewBeer from './Pages/NewBeer'
 
 const App = () => {
   const [token, setToken] = useState('')
@@ -69,6 +70,10 @@ const App = () => {
             <Route
               element={<PrivateRoute component={Beer} />}
               path='/beers/:beerId'
+            />
+            <Route
+              element={<PrivateRoute component={NewBeer} />}
+              path='/beers/new'
             />
             <Route element={<PrivateRoute component={Lists} />} path='/lists' />
           </Routes>
