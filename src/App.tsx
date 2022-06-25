@@ -18,6 +18,7 @@ import Lists from './Pages/Lists'
 import Beer from './Pages/Beer'
 import Beers from './Pages/Beers'
 import NewBeer from './Pages/NewBeer'
+import Auth0ProviderWithHistory from './auth/auth0-provider-with-history'
 
 const App = () => {
   const [token, setToken] = useState('')
@@ -56,29 +57,37 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <ApolloProvider client={client}>
-        <Router>
-          <Header />
-          <CssBaseline />
-          <Routes>
-            <Route element={<Start />} path='/' />
-            <Route
-              element={<PrivateRoute component={Search} />}
-              path='/search'
-            />
-            <Route element={<PrivateRoute component={Beers} />} path='/beers' />
-            <Route
-              element={<PrivateRoute component={Beer} />}
-              path='/beers/:beerId'
-            />
-            <Route
-              element={<PrivateRoute component={NewBeer} />}
-              path='/beers/new'
-            />
-            <Route element={<PrivateRoute component={Lists} />} path='/lists' />
-          </Routes>
-        </Router>
-      </ApolloProvider>
+      <Router>
+        <Auth0ProviderWithHistory>
+          <ApolloProvider client={client}>
+            <Header />
+            <CssBaseline />
+            <Routes>
+              <Route element={<Start />} path='/' />
+              <Route
+                element={<PrivateRoute component={Search} />}
+                path='/search'
+              />
+              <Route
+                element={<PrivateRoute component={Beers} />}
+                path='/beers'
+              />
+              <Route
+                element={<PrivateRoute component={Beer} />}
+                path='/beers/:beerId'
+              />
+              <Route
+                element={<PrivateRoute component={NewBeer} />}
+                path='/beers/new'
+              />
+              <Route
+                element={<PrivateRoute component={Lists} />}
+                path='/lists'
+              />
+            </Routes>
+          </ApolloProvider>
+        </Auth0ProviderWithHistory>
+      </Router>
     </ThemeProvider>
   )
 }
