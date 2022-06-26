@@ -101,15 +101,12 @@ const Search = () => {
           </List>
         )}
         {searchData?.length === 0 && (
-          <Fab
-            href='/beers/new'
-            variant='extended'
-            size='small'
-            sx={{ alignSelf: 'center' }}
-          >
-            Can't find anything? Create new
-            <Add sx={{ ml: 1 }} />
-          </Fab>
+          <StyledLink to='/beers/new' style={{ alignSelf: 'center' }}>
+            <Fab variant='extended' size='small'>
+              Can't find anything? Create new
+              <Add sx={{ ml: 1 }} />
+            </Fab>
+          </StyledLink>
         )}
       </Stack>
     </ContentContainer>
