@@ -2,7 +2,11 @@ import React from 'react'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router-dom'
 
-const Auth0ProviderWithHistory = ({ children }: any) => {
+type Props = {
+  children: JSX.Element[] | JSX.Element
+}
+
+const Auth0ProviderWithHistory = ({ children }: Props) => {
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE || ''
   const domain = process.env.REACT_APP_AUTH0_DOMAIN || ''
   const clientId = process.env.REACT_APP_AUTH0_CLIENTID || ''

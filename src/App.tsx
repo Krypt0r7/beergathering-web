@@ -9,7 +9,7 @@ import {
   createHttpLink
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { PrivateRoute } from './Components/PrivateRoute'
 import Start from './Pages/Start'
@@ -18,7 +18,7 @@ import Lists from './Pages/Lists'
 import Beer from './Pages/Beer'
 import Beers from './Pages/Beers'
 import NewBeer from './Pages/NewBeer'
-import Auth0ProviderWithHistory from './auth/auth0-provider-with-history'
+import NotFound from './NotFound'
 
 const App = () => {
   const [token, setToken] = useState('')
@@ -57,37 +57,25 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <Router>
-        <Auth0ProviderWithHistory>
-          <ApolloProvider client={client}>
-            <Header />
-            <CssBaseline />
-            <Routes>
-              <Route element={<Start />} path='/' />
-              <Route
-                element={<PrivateRoute component={Search} />}
-                path='/search'
-              />
-              <Route
-                element={<PrivateRoute component={Beers} />}
-                path='/beers'
-              />
-              <Route
-                element={<PrivateRoute component={Beer} />}
-                path='/beers/:beerId'
-              />
-              <Route
-                element={<PrivateRoute component={NewBeer} />}
-                path='/beers/new'
-              />
-              <Route
-                element={<PrivateRoute component={Lists} />}
-                path='/lists'
-              />
-            </Routes>
-          </ApolloProvider>
-        </Auth0ProviderWithHistory>
-      </Router>
+      <ApolloProvider client={client}>
+        <Header />
+        <CssBaseline />
+        <Routes>
+          <Route element={<Start />} path='/' />
+          <Route element={<PrivateRoute component={Search} />} path='/search' />
+          <Route element={<PrivateRoute component={Beers} />} path='/beers' />
+          <Route
+            element={<PrivateRoute component={Beer} />}
+            path='/beers/:beerId'
+          />
+          <Route
+            element={<PrivateRoute component={NewBeer} />}
+            path='/beers/new'
+          />
+          <Route element={<PrivateRoute component={Lists} />} path='/lists' />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </ApolloProvider>
     </ThemeProvider>
   )
 }

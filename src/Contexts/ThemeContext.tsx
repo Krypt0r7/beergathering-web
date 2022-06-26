@@ -2,20 +2,22 @@ import React, { createContext, useEffect, useState, FC } from 'react'
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material'
 import { useLocalStorage } from '../Hooks/useLocalStorage'
 
+type Props = {
+  children: JSX.Element[] | JSX.Element
+}
+
 interface IThemeContext {
   isDark: boolean
   switchTheme: () => void
 }
 
-const defaultState = {
-  isDark: false,
+export const ThemeContext = createContext<IThemeContext>({
+  isDark: true,
   switchTheme: Function
-}
+})
 
-export const ThemeContext = createContext<IThemeContext>(defaultState)
-
-export const ThemeProvider: FC = ({ children }) => {
-  const [isDark, setIsDark] = useState(defaultState.isDark)
+export const ThemeProvider: FC<Props> = ({ children }) => {
+  const [isDark, setIsDark] = useState(false)
   const [dark, setDark] = useLocalStorage('darkMode', false)
 
   const sharedTheme = {
