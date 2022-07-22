@@ -8,16 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:  
+    steps:
       - uses: actions/checkout@v2
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-  
+
       - name: Build React App
         run: yarn install && yarn build
         env:
@@ -26,6 +26,8 @@ jobs:
           REACT_APP_AUTH0_AUDIENCE: ${{ secrets.REACT_APP_AUTH0_AUDIENCE }}
           REACT_APP_API_URI: ${{ secrets.REACT_APP_API_URI }}
           REACT_APP_AUTH0_CALLBACK_URL: ${{ secrets.REACT_APP_AUTH0_CALLBACK_URL }}
-          
+
       - name: Deploy app build to S3 bucket
         run: aws s3 sync ./build s3://beergathering.com/
+      - name: Invalidate
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRUBUTION_ID }} --paths '/*'

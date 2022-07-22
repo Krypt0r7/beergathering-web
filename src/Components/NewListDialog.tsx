@@ -19,7 +19,7 @@ interface INewListProps {
 const NEW_LIST_MUTATION = gql`
   mutation CreateListMutation($input: List_CreateListInput) {
     list {
-      createListMutation(input: $input)
+      createList(input: $input)
     }
   }
 `
@@ -59,8 +59,8 @@ const NewListDialog: React.FC<INewListProps> = ({ open, onClose }) => {
       <DialogActions>
         <Button onClick={() => onClose()}>Cancel</Button>
         <Button
-          onClick={() => {
-            saveNewList({
+          onClick={async () => {
+            await saveNewList({
               variables: {
                 input: {
                   description: listProps.description,
